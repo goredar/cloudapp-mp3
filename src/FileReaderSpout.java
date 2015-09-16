@@ -34,7 +34,11 @@ public class FileReaderSpout implements IRichSpout {
 
     ------------------------------------------------- */
     Path path = FileSystems.getDefault().getPath("./", "data.txt");
-    this.inputLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+    try {
+      this.inputLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      
+    }
     this.linesCursor = 0;
     this.context = context;
     this._collector = collector;
