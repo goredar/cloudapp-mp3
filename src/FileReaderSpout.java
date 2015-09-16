@@ -37,7 +37,7 @@ public class FileReaderSpout implements IRichSpout {
     try {
       this.inputLines = Files.readAllLines(path, StandardCharsets.UTF_8);
     } catch (IOException e) {
-      
+
     }
     this.linesCursor = 0;
     this.context = context;
