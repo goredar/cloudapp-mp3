@@ -3,7 +3,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
+import java.util.*;
+import java.io.File;
+import java.nio.file.*;
+import java.nio.charset.StandardCharsets;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -15,6 +18,8 @@ import backtype.storm.tuple.Values;
 public class FileReaderSpout implements IRichSpout {
   private SpoutOutputCollector _collector;
   private TopologyContext context;
+  private List<String> inputLines;
+  private Integer linesCursor;
 
 
   @Override
@@ -27,7 +32,9 @@ public class FileReaderSpout implements IRichSpout {
 
 
     ------------------------------------------------- */
-
+    Path path = FileSystems.getDefault().getPath("./", "data.txt");
+    this.inputLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+    this.linesCursor = 0;
     this.context = context;
     this._collector = collector;
   }
@@ -42,8 +49,10 @@ public class FileReaderSpout implements IRichSpout {
     2. don't forget to sleep when the file is entirely read to prevent a busy-loop
 
     ------------------------------------------------- */
-
-
+    Utils.sleep(100);
+    String sentence = this.inputLines.get(this.linesCursor);
+    _collector.emit(new Values(sentence));
+    this.linesCursor += 1;
   }
 
   @Override
